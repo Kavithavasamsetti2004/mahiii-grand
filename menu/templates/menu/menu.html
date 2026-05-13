@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahiii Grand — Menu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--gold:#c9a84c;--dark-gold:#a07830;--brown:#3b1f0a;--light-brown:#6b3a1f;--red:#8b1a1a;}
+  body{font-family:'Lato',sans-serif;background:var(--brown);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .card{background:linear-gradient(145deg,#fdf6e3,#f5e6c8);border-radius:12px;padding:28px 24px;max-width:600px;width:100%;box-shadow:0 8px 40px rgba(59,31,10,0.4);border:2px solid var(--gold);}
+  .header{text-align:center;margin-bottom:12px;}
+  h1{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;color:var(--brown);}
+  .ornament{color:var(--gold);letter-spacing:8px;font-size:18px;margin:4px 0;}
+  .info-bar{background:var(--red);color:var(--gold);padding:8px 16px;border-radius:8px;font-size:0.88rem;text-align:center;margin:10px 0 16px;border:1px solid var(--gold);}
+  .section-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--red);background:linear-gradient(90deg,rgba(201,168,76,0.15),transparent);padding:8px 12px;border-left:4px solid var(--gold);margin:18px 0 8px;border-radius:0 6px 6px 0;}
+  .food-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px dashed rgba(201,168,76,0.4);border-radius:6px;transition:background 0.15s;}
+  .food-item:hover{background:rgba(201,168,76,0.1);}
+  .food-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--red);cursor:pointer;flex-shrink:0;}
+  .food-name{flex:1;font-size:0.95rem;color:var(--brown);font-weight:600;}
+  .food-price{font-weight:700;color:var(--red);font-size:0.95rem;}
+  .sticky-bar{position:sticky;bottom:0;background:var(--brown);color:var(--gold);padding:12px 16px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-top:16px;border:1px solid var(--gold);}
+  .sticky-bar span{font-weight:700;font-size:1rem;}
+  .btn{padding:10px 24px;background:linear-gradient(135deg,var(--red),#6b1010);color:var(--gold);font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;border:2px solid var(--gold);border-radius:8px;cursor:pointer;letter-spacing:1px;}
+  .btn:hover{opacity:0.9;}
+  .err-msg{color:var(--red);font-size:0.85rem;text-align:center;margin-top:8px;display:none;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div style="font-size:28px;">👑</div>
+    <h1>Mahiii Grand Menu</h1>
+    <div class="ornament">✦ ✦ ✦</div>
+  </div>
+  <div class="info-bar">
+    👤 {{ customer.name }} &nbsp;|&nbsp; {{ customer.table }} &nbsp;|&nbsp; 💳 {{ customer.payment }}
+  </div>
+
+  <form method="POST" action="{% url 'place_order' %}" id="orderForm">
+    {% csrf_token %}
+
+    {% for section in menu_data %}
+    <div class="section-title">{{ section.emoji }} {{ section.section }}</div>
+    {% for item in section.items %}
+    <div class="food-item" data-price="{{ item.price }}">
+      <input type="checkbox" name="items" value="{{ item.name }}" id="item-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" onchange="updateTotal()">
+      <label for="item-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="food-name" style="cursor:pointer;">{{ item.name }}</label>
+      <span class="food-price">₹{{ item.price }}</span>
+    </div>
+    {% endfor %}
+    {% endfor %}
+
+    <div class="sticky-bar">
+      <span>🛒 Items: <span id="item-count">0</span> &nbsp;|&nbsp; Total: ₹<span id="total-price">0</span></span>
+      <button type="button" class="btn" onclick="submitOrder()">✅ Confirm →</button>
+    </div>
+    <div class="err-msg" id="err-msg">⚠️ Please select at least one item!</div>
+  </form>
+</div>
+
+<script>
+function updateTotal(){
+  let total = 0, count = 0;
+  document.querySelectorAll('.food-item input:checked').forEach(c => {
+    total += parseInt(c.closest('.food-item').dataset.price);
+    count++;
+  });
+  document.getElementById('item-count').textContent = count;
+  document.getElementById('total-price').textContent = total;
+}
+function submitOrder(){
+  const checked = document.querySelectorAll('.food-item input:checked');
+  if(checked.length === 0){
+    document.getElementById('err-msg').style.display = 'block';
+    return;
+  }
+  document.getElementById('orderForm').submit();
+}
+</script>
+</body>
+</html>

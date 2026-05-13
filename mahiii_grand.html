@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahiii Grand</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --gold:#c9a84c;--dark-gold:#a07830;--cream:#fdf6e3;--brown:#3b1f0a;
+    --light-brown:#6b3a1f;--red:#8b1a1a;--shadow:rgba(59,31,10,0.3);
+  }
+  body{font-family:'Lato',sans-serif;background:var(--brown);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+
+  .page{display:none;width:100%;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;padding:20px;}
+  .page.active{display:flex;}
+
+  /* ORNAMENT */
+  .ornament{color:var(--gold);font-size:22px;letter-spacing:8px;text-align:center;margin:6px 0;}
+  .divider{display:flex;align-items:center;gap:10px;margin:10px 0;}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--gold);}
+  .divider span{color:var(--gold);font-size:18px;}
+
+  /* CARD */
+  .card{background:linear-gradient(145deg,#fdf6e3,#f5e6c8);border-radius:12px;padding:36px 32px;max-width:480px;width:100%;box-shadow:0 8px 40px var(--shadow);border:2px solid var(--gold);position:relative;overflow:hidden;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--dark-gold),var(--gold),var(--dark-gold));}
+
+  .logo-crown{font-size:42px;text-align:center;margin-bottom:4px;}
+  .restaurant-name{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:var(--brown);text-align:center;line-height:1.1;}
+  .restaurant-sub{font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--light-brown);text-align:center;letter-spacing:3px;margin-top:4px;text-transform:uppercase;}
+  .welcome-text{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--red);text-align:center;margin:14px 0 6px;font-style:italic;}
+  .table-badge{display:inline-block;background:var(--red);color:var(--gold);font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;padding:6px 22px;border-radius:30px;border:2px solid var(--gold);margin:8px auto;letter-spacing:2px;}
+  .table-wrap{text-align:center;margin-bottom:10px;}
+
+  label{display:block;font-weight:700;color:var(--brown);margin:12px 0 4px;font-size:0.9rem;letter-spacing:0.5px;}
+  input,select{width:100%;padding:11px 14px;border:1.5px solid var(--dark-gold);border-radius:8px;background:#fffdf5;font-size:0.95rem;color:var(--brown);font-family:'Lato',sans-serif;outline:none;transition:border 0.2s;}
+  input:focus,select:focus{border-color:var(--red);}
+
+  .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--red),#6b1010);color:var(--gold);font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;border:2px solid var(--gold);border-radius:8px;cursor:pointer;margin-top:18px;letter-spacing:1px;transition:all 0.2s;}
+  .btn:hover{background:linear-gradient(135deg,#a02020,var(--red));transform:translateY(-1px);box-shadow:0 4px 15px rgba(139,26,26,0.4);}
+
+  /* PAGE 2 - MENU */
+  .menu-card{background:linear-gradient(145deg,#fdf6e3,#f5e6c8);border-radius:12px;padding:28px 24px;max-width:600px;width:100%;box-shadow:0 8px 40px var(--shadow);border:2px solid var(--gold);}
+  .menu-header{text-align:center;margin-bottom:16px;}
+  .menu-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;color:var(--brown);}
+  .customer-info-bar{background:var(--red);color:var(--gold);padding:8px 16px;border-radius:8px;font-size:0.88rem;text-align:center;margin:8px 0 14px;border:1px solid var(--gold);}
+
+  .section-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--red);background:linear-gradient(90deg,rgba(201,168,76,0.15),transparent);padding:8px 12px;border-left:4px solid var(--gold);margin:18px 0 8px;border-radius:0 6px 6px 0;}
+  .food-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px dashed rgba(201,168,76,0.4);transition:background 0.15s;border-radius:6px;}
+  .food-item:hover{background:rgba(201,168,76,0.1);}
+  .food-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--red);cursor:pointer;flex-shrink:0;}
+  .food-name{flex:1;font-size:0.95rem;color:var(--brown);font-weight:600;}
+  .food-price{font-weight:700;color:var(--red);font-size:0.95rem;white-space:nowrap;}
+
+  .order-summary-bar{background:var(--brown);color:var(--gold);padding:10px 16px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-top:16px;border:1px solid var(--gold);}
+  .order-summary-bar span{font-weight:700;font-size:1rem;}
+
+  /* PAGE 3 */
+  .success-icon{font-size:60px;text-align:center;margin:10px 0;}
+  .success-title{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;color:var(--red);text-align:center;}
+  .summary-box{background:#fff9ee;border:1.5px solid var(--gold);border-radius:10px;padding:14px 18px;margin:14px 0;}
+  .summary-row{display:flex;justify-content:space-between;padding:5px 0;font-size:0.92rem;color:var(--brown);border-bottom:1px dashed rgba(201,168,76,0.3);}
+  .summary-row:last-child{border:none;font-weight:700;font-size:1rem;color:var(--red);}
+  .payment-section{text-align:center;margin:14px 0;}
+  .payment-label{font-family:'Playfair Display',serif;font-size:1rem;color:var(--brown);font-weight:700;margin-bottom:10px;}
+  .upi-box{background:var(--brown);color:var(--gold);padding:12px 20px;border-radius:10px;font-size:1rem;font-weight:700;letter-spacing:2px;border:2px solid var(--gold);margin:6px 0;}
+  .qr-placeholder{width:150px;height:150px;margin:12px auto;border:3px solid var(--gold);border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;}
+  .qr-placeholder svg{width:120px;height:120px;}
+  .thanks-msg{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--light-brown);text-align:center;font-style:italic;margin-top:10px;}
+
+  .error{color:var(--red);font-size:0.82rem;margin-top:4px;display:none;}
+
+  @media(max-width:500px){
+    .card,.menu-card{padding:24px 14px;}
+    .restaurant-name{font-size:1.8rem;}
+    .menu-title{font-size:1.4rem;}
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: WELCOME -->
+<div class="page active" id="page1">
+  <div class="card">
+    <div class="logo-crown">👑</div>
+    <div class="restaurant-name">Mahiii Grand</div>
+    <div class="restaurant-sub">Fine Dining Experience</div>
+    <div class="ornament">✦ ✦ ✦</div>
+    <div class="divider"><span>🌿</span></div>
+    <div class="welcome-text">✨ Welcome to Mahiii Grand ✨</div>
+    <p style="text-align:center;color:#6b3a1f;font-size:0.9rem;margin-bottom:10px;">We are delighted to serve you today.<br>Please fill in your details to begin.</p>
+    <div class="table-wrap">
+      <div class="table-badge" id="table-badge">🍽️ Table — </div>
+    </div>
+
+    <label>Select Your Table Number</label>
+    <select id="tableNo">
+      <option value="">-- Select Table --</option>
+      <option>Table 1</option><option>Table 2</option><option>Table 3</option>
+      <option>Table 4</option><option>Table 5</option><option>Table 6</option>
+      <option>Table 7</option><option>Table 8</option><option>Table 9</option>
+      <option>Table 10</option>
+    </select>
+    <div class="error" id="err-table">Please select your table number.</div>
+
+    <label>Your Name</label>
+    <input type="text" id="custName" placeholder="e.g. Ravi Kumar">
+    <div class="error" id="err-name">Please enter your name.</div>
+
+    <label>Phone Number</label>
+    <input type="tel" id="custPhone" placeholder="e.g. 98765 43210" maxlength="10">
+    <div class="error" id="err-phone">Please enter a valid 10-digit phone number.</div>
+
+    <label>Payment Type</label>
+    <select id="payType">
+      <option value="">-- Select Payment --</option>
+      <option>UPI / QR Code</option>
+      <option>Cash on Delivery</option>
+      <option>Card Payment</option>
+    </select>
+    <div class="error" id="err-pay">Please select a payment type.</div>
+
+    <button class="btn" onclick="goToMenu()">🍽️ Proceed to Menu →</button>
+    <div class="ornament" style="margin-top:16px;">— Mahiii Grand —</div>
+  </div>
+</div>
+
+<!-- PAGE 2: MENU -->
+<div class="page" id="page2">
+  <div class="menu-card">
+    <div class="menu-header">
+      <div class="logo-crown" style="font-size:30px;">👑</div>
+      <div class="menu-title">Mahiii Grand Menu</div>
+      <div class="ornament">✦ ✦ ✦</div>
+    </div>
+    <div class="customer-info-bar" id="cust-bar">Welcome! Please select your items below.</div>
+
+    <div id="menu-list"></div>
+
+    <div class="order-summary-bar">
+      <span>Selected Items: <span id="item-count">0</span></span>
+      <span>Total: ₹<span id="total-price">0</span></span>
+    </div>
+    <button class="btn" onclick="confirmOrder()">✅ Confirm Order →</button>
+  </div>
+</div>
+
+<!-- PAGE 3: PAYMENT -->
+<div class="page" id="page3">
+  <div class="card" style="max-width:520px;">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Order Confirmed!</div>
+    <p style="text-align:center;color:#6b3a1f;font-size:0.9rem;margin:6px 0 14px;">Thank you for ordering at <strong>Mahiii Grand</strong>.<br>Your food is being prepared with love! 🍽️</p>
+
+    <div class="divider"><span>📋</span></div>
+    <p style="font-family:'Playfair Display',serif;font-weight:700;color:var(--brown);margin:8px 0 4px;">Order Summary</p>
+    <div class="summary-box" id="order-summary"></div>
+
+    <div class="divider"><span>💳</span></div>
+    <div class="payment-section">
+      <div class="payment-label" id="pay-label">Complete Your Payment</div>
+
+      <div id="upi-section">
+        <div style="font-size:0.85rem;color:#6b3a1f;margin-bottom:6px;">Scan QR Code or Pay to UPI ID:</div>
+        <div class="qr-placeholder">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="35" height="35" fill="none" stroke="#3b1f0a" stroke-width="4"/>
+            <rect x="12" y="12" width="21" height="21" fill="#3b1f0a"/>
+            <rect x="60" y="5" width="35" height="35" fill="none" stroke="#3b1f0a" stroke-width="4"/>
+            <rect x="67" y="12" width="21" height="21" fill="#3b1f0a"/>
+            <rect x="5" y="60" width="35" height="35" fill="none" stroke="#3b1f0a" stroke-width="4"/>
+            <rect x="12" y="67" width="21" height="21" fill="#3b1f0a"/>
+            <rect x="60" y="60" width="8" height="8" fill="#3b1f0a"/>
+            <rect x="72" y="60" width="8" height="8" fill="#3b1f0a"/>
+            <rect x="84" y="60" width="8" height="8" fill="#3b1f0a"/>
+            <rect x="60" y="72" width="8" height="8" fill="#3b1f0a"/>
+            <rect x="84" y="72" width="8" height="8" fill="#3b1f0a"/>
+            <rect x="60" y="84" width="8" height="8" fill="#3b1f0a"/>
+            <rect x="72" y="84" width="8" height="8" fill="#3b1f0a"/>
+            <rect x="84" y="84" width="8" height="8" fill="#3b1f0a"/>
+          </svg>
+        </div>
+        <div class="upi-box">📱 UPI ID: XXXXX@mahiigrand</div>
+        <div class="upi-box">📞 Pay to: XXXXX-XXXXX</div>
+      </div>
+
+      <div id="cash-section" style="display:none;">
+        <div style="font-size:1rem;color:#6b3a1f;padding:14px;background:#fff9ee;border:2px dashed var(--gold);border-radius:10px;">
+          💵 Please pay <strong id="cash-total"></strong> in <strong>Cash</strong> to our staff.<br><br>
+          Your food will be served shortly! 🙏
+        </div>
+      </div>
+
+      <div id="card-section" style="display:none;">
+        <div style="font-size:1rem;color:#6b3a1f;padding:14px;background:#fff9ee;border:2px dashed var(--gold);border-radius:10px;">
+          💳 Our staff will bring the <strong>Card Machine</strong> to your table.<br><br>
+          Amount to pay: <strong id="card-total"></strong> 🙏
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>🌿</span></div>
+    <div class="thanks-msg">"Thank you for dining with us!<br>We hope to see you again soon." 🙏</div>
+    <div class="ornament" style="margin-top:10px;">— Mahiii Grand —</div>
+    <button class="btn" style="margin-top:16px;background:linear-gradient(135deg,#2d6a2d,#1a4a1a);" onclick="newOrder()">🔄 New Order</button>
+  </div>
+</div>
+
+<script>
+const menuData = [
+  {section:"🍛 Biryani", items:[
+    {name:"Chicken Biryani",price:250},{name:"Mutton Biryani",price:350},
+    {name:"Mixed Biryani",price:400},{name:"Kunda Biryani",price:500},{name:"Veg Biryani",price:200}
+  ]},
+  {section:"🍳 Fried Rice", items:[
+    {name:"Veg Fried Rice",price:100},{name:"Egg Fried Rice",price:150},{name:"Chicken Fried Rice",price:200}
+  ]},
+  {section:"🍽️ Meals", items:[
+    {name:"Veg Meals",price:150},{name:"Non-Veg Meals",price:250}
+  ]},
+  {section:"🍗 Starters", items:[
+    {name:"Chicken Lollipop",price:250},{name:"Chicken Wings",price:200},
+    {name:"Garlic Bread",price:180},{name:"Spring Rolls",price:200}
+  ]},
+  {section:"🍨 Ice Cream", items:[
+    {name:"Butterscotch Ice Cream",price:50},{name:"Vanilla Ice Cream",price:50},{name:"Chocolate Ice Cream",price:50}
+  ]},
+  {section:"🍮 Sweets", items:[
+    {name:"Gulab Jamun",price:50}
+  ]},
+  {section:"🥤 Cool Drinks", items:[
+    {name:"Sprite",price:30},{name:"Maaza",price:30},{name:"Thumbs Up",price:30},
+    {name:"Fanta",price:30},{name:"Limca",price:30}
+  ]}
+];
+
+let customerData = {};
+let selectedItems = [];
+
+// Build menu
+const menuList = document.getElementById('menu-list');
+menuData.forEach((sec,si) => {
+  const st = document.createElement('div');
+  st.className = 'section-title';
+  st.textContent = sec.section;
+  menuList.appendChild(st);
+  sec.items.forEach((item,ii) => {
+    const id = `item-${si}-${ii}`;
+    const div = document.createElement('div');
+    div.className = 'food-item';
+    div.innerHTML = `
+      <input type="checkbox" id="${id}" onchange="updateTotal()">
+      <label for="${id}" class="food-name" style="cursor:pointer;margin:0;">${item.name}</label>
+      <span class="food-price">₹${item.price}</span>`;
+    div.dataset.name = item.name;
+    div.dataset.price = item.price;
+    menuList.appendChild(div);
+  });
+});
+
+document.getElementById('tableNo').addEventListener('change', function(){
+  document.getElementById('table-badge').textContent = '🍽️ ' + (this.value || 'Table —');
+});
+
+function showErr(id, show){
+  document.getElementById(id).style.display = show ? 'block' : 'none';
+}
+
+function goToMenu(){
+  const table = document.getElementById('tableNo').value;
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const pay = document.getElementById('payType').value;
+  let ok = true;
+  showErr('err-table', !table); if(!table) ok=false;
+  showErr('err-name', !name); if(!name) ok=false;
+  showErr('err-phone', !/^\d{10}$/.test(phone)); if(!/^\d{10}$/.test(phone)) ok=false;
+  showErr('err-pay', !pay); if(!pay) ok=false;
+  if(!ok) return;
+  customerData = {table, name, phone, pay};
+  document.getElementById('cust-bar').textContent = `👤 ${name}  |  ${table}  |  💳 ${pay}`;
+  switchPage('page2');
+}
+
+function updateTotal(){
+  const checks = document.querySelectorAll('#menu-list input[type=checkbox]:checked');
+  let total = 0, count = 0;
+  checks.forEach(c => {
+    const row = c.closest('.food-item');
+    total += parseInt(row.dataset.price);
+    count++;
+  });
+  document.getElementById('item-count').textContent = count;
+  document.getElementById('total-price').textContent = total;
+}
+
+function confirmOrder(){
+  const checks = document.querySelectorAll('#menu-list input[type=checkbox]:checked');
+  if(checks.length === 0){ alert('Please select at least one item!'); return; }
+  selectedItems = [];
+  let total = 0;
+  checks.forEach(c => {
+    const row = c.closest('.food-item');
+    const p = parseInt(row.dataset.price);
+    selectedItems.push({name: row.dataset.name, price: p});
+    total += p;
+  });
+
+  // Build summary
+  const box = document.getElementById('order-summary');
+  box.innerHTML = '';
+  selectedItems.forEach(i => {
+    const r = document.createElement('div');
+    r.className = 'summary-row';
+    r.innerHTML = `<span>${i.name}</span><span>₹${i.price}</span>`;
+    box.appendChild(r);
+  });
+  const tot = document.createElement('div');
+  tot.className = 'summary-row';
+  tot.innerHTML = `<span>Total Amount</span><span>₹${total}</span>`;
+  box.appendChild(tot);
+
+  // Payment method
+  const pay = customerData.pay;
+  document.getElementById('upi-section').style.display = pay === 'UPI / QR Code' ? 'block' : 'none';
+  document.getElementById('cash-section').style.display = pay === 'Cash on Delivery' ? 'block' : 'none';
+  document.getElementById('card-section').style.display = pay === 'Card Payment' ? 'block' : 'none';
+  document.getElementById('cash-total').textContent = `₹${total}`;
+  document.getElementById('card-total').textContent = `₹${total}`;
+  document.getElementById('pay-label').textContent = `Complete Payment — ₹${total}`;
+
+  switchPage('page3');
+}
+
+function newOrder(){
+  document.querySelectorAll('#menu-list input[type=checkbox]').forEach(c => c.checked = false);
+  updateTotal();
+  document.getElementById('tableNo').value = '';
+  document.getElementById('custName').value = '';
+  document.getElementById('custPhone').value = '';
+  document.getElementById('payType').value = '';
+  document.getElementById('table-badge').textContent = '🍽️ Table —';
+  switchPage('page1');
+}
+
+function switchPage(id){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

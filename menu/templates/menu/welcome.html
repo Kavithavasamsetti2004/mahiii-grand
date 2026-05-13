@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahiii Grand — Welcome</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--gold:#c9a84c;--dark-gold:#a07830;--cream:#fdf6e3;--brown:#3b1f0a;--light-brown:#6b3a1f;--red:#8b1a1a;}
+  body{font-family:'Lato',sans-serif;background:var(--brown);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .card{background:linear-gradient(145deg,#fdf6e3,#f5e6c8);border-radius:12px;padding:36px 32px;max-width:460px;width:100%;box-shadow:0 8px 40px rgba(59,31,10,0.4);border:2px solid var(--gold);position:relative;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--dark-gold),var(--gold),var(--dark-gold));border-radius:12px 12px 0 0;}
+  .logo{font-size:42px;text-align:center;margin-bottom:4px;}
+  h1{font-family:'Playfair Display',serif;font-size:2.3rem;font-weight:900;color:var(--brown);text-align:center;}
+  .sub{font-family:'Playfair Display',serif;font-size:0.9rem;color:var(--light-brown);text-align:center;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+  .ornament{color:var(--gold);text-align:center;letter-spacing:8px;margin:8px 0;font-size:18px;}
+  .welcome{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--red);text-align:center;font-style:italic;margin:10px 0 4px;}
+  .desc{text-align:center;color:var(--light-brown);font-size:0.88rem;margin-bottom:14px;}
+  label{display:block;font-weight:700;color:var(--brown);margin:12px 0 4px;font-size:0.88rem;letter-spacing:0.5px;}
+  input,select{width:100%;padding:11px 14px;border:1.5px solid var(--dark-gold);border-radius:8px;background:#fffdf5;font-size:0.95rem;color:var(--brown);font-family:'Lato',sans-serif;outline:none;}
+  input:focus,select:focus{border-color:var(--red);}
+  .error{color:var(--red);font-size:0.8rem;margin-top:3px;}
+  .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--red),#6b1010);color:var(--gold);font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;border:2px solid var(--gold);border-radius:8px;cursor:pointer;margin-top:18px;letter-spacing:1px;}
+  .btn:hover{opacity:0.9;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">👑</div>
+  <h1>Mahiii Grand</h1>
+  <div class="sub">Fine Dining Experience</div>
+  <div class="ornament">✦ ✦ ✦</div>
+  <div class="welcome">✨ Welcome to Mahiii Grand ✨</div>
+  <p class="desc">We are delighted to serve you today.<br>Please fill in your details to begin.</p>
+
+  <form method="POST" action="{% url 'welcome' %}">
+    {% csrf_token %}
+
+    <label>Select Your Table Number</label>
+    <select name="table_number" required>
+      <option value="">-- Select Table --</option>
+      {% for i in "1234567890" %}{% endfor %}
+      <option value="Table 1"  {% if post.table_number == "Table 1"  %}selected{% endif %}>Table 1</option>
+      <option value="Table 2"  {% if post.table_number == "Table 2"  %}selected{% endif %}>Table 2</option>
+      <option value="Table 3"  {% if post.table_number == "Table 3"  %}selected{% endif %}>Table 3</option>
+      <option value="Table 4"  {% if post.table_number == "Table 4"  %}selected{% endif %}>Table 4</option>
+      <option value="Table 5"  {% if post.table_number == "Table 5"  %}selected{% endif %}>Table 5</option>
+      <option value="Table 6"  {% if post.table_number == "Table 6"  %}selected{% endif %}>Table 6</option>
+      <option value="Table 7"  {% if post.table_number == "Table 7"  %}selected{% endif %}>Table 7</option>
+      <option value="Table 8"  {% if post.table_number == "Table 8"  %}selected{% endif %}>Table 8</option>
+      <option value="Table 9"  {% if post.table_number == "Table 9"  %}selected{% endif %}>Table 9</option>
+      <option value="Table 10" {% if post.table_number == "Table 10" %}selected{% endif %}>Table 10</option>
+    </select>
+    {% if errors.table %}<div class="error">{{ errors.table }}</div>{% endif %}
+
+    <label>Your Name</label>
+    <input type="text" name="customer_name" placeholder="e.g. Ravi Kumar" value="{{ post.customer_name|default:'' }}">
+    {% if errors.name %}<div class="error">{{ errors.name }}</div>{% endif %}
+
+    <label>Phone Number (10 digits)</label>
+    <input type="tel" name="phone_number" placeholder="e.g. 9876543210" maxlength="10" value="{{ post.phone_number|default:'' }}">
+    {% if errors.phone %}<div class="error">{{ errors.phone }}</div>{% endif %}
+
+    <label>Payment Type</label>
+    <select name="payment_type" required>
+      <option value="">-- Select Payment --</option>
+      <option value="UPI / QR Code"     {% if post.payment_type == "UPI / QR Code"     %}selected{% endif %}>UPI / QR Code</option>
+      <option value="Cash on Delivery"  {% if post.payment_type == "Cash on Delivery"  %}selected{% endif %}>Cash on Delivery</option>
+      <option value="Card Payment"      {% if post.payment_type == "Card Payment"       %}selected{% endif %}>Card Payment</option>
+    </select>
+    {% if errors.pay %}<div class="error">{{ errors.pay }}</div>{% endif %}
+
+    <button type="submit" class="btn">🍽️ Proceed to Menu →</button>
+  </form>
+  <div class="ornament" style="margin-top:16px;">— Mahiii Grand —</div>
+</div>
+</body>
+</html>
