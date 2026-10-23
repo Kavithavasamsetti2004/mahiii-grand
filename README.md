@@ -14,6 +14,18 @@ Mahi Grand is a smart restaurant digital menu application designed to make the d
 - Order confirmation and summary
 - Payment method selection and instructions
 
+## 🖥️ Project Screenshots
+
+### 1. Welcome Page
+![Mahi Grand Welcome Page](Welcome_page.png)
+
+### 2. Digital Menu
+![Mahi Grand Digital Menu](Menu_Card.png)
+
+### 3. Order Status
+![Mahi Grand Order Status](Order_status.png)
+
+
 ## 🛠️ Technologies Used
 
 - **Backend:** Python, Django
